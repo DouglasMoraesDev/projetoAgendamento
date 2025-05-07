@@ -1,0 +1,11 @@
+{
+  "name": "nutri-manager-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "serve public -l 5000"
+  },
+  "dependencies": {
+    "serve": "^14.2.0"
+  }
+}

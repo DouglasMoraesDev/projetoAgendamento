@@ -1,0 +1,103 @@
+  
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Nutricionista {
+  id         Int         @id @default(autoincrement())
+  nome       String
+  email      String      @unique
+  senhaHash  String      @map("senha_hash")
+  criadoEm   DateTime    @default(now()) @map("criado_em")
+  pacientes  Paciente[]
+  consultas  Consulta[]
+}
+
+model Paciente {
+  id              Int         @id @default(autoincrement())
+  nutricionista   Nutricionista @relation(fields: [nutricionistaId], references: [id], onDelete: Cascade)
+  nutricionistaId Int         @map("nutricionista_id")
+  nome            String
+  email           String
+  dataNasc        DateTime?   @map("data_nasc")
+  historico       String?     
+  alergias        String?
+  objetivos       String?
+  criadoEm        DateTime    @default(now()) @map("criado_em")
+  consultas       Consulta[]
+  diarios         Diario[]
+}
+
+model Consulta {
+  id               Int         @id @default(autoincrement())
+  paciente         Paciente    @relation(fields: [pacienteId], references: [id], onDelete: Cascade)
+  pacienteId       Int         @map("paciente_id")
+  nutricionista    Nutricionista @relation(fields: [nutricionistaId], references: [id], onDelete: Cascade)
+  nutricionistaId  Int         @map("nutricionista_id")
+  dataHora         DateTime    @map("data_hora")
+  tipo             TipoConsulta @default(presencial)
+  status           StatusConsulta @default(agendada)
+  criadoEm         DateTime    @default(now()) @map("criado_em")
+  pagamentos       Pagamento[]
+  documentos       Documento[]
+}
+
+model Diario {
+  id          Int       @id @default(autoincrement())
+  paciente    Paciente  @relation(fields: [pacienteId], references: [id], onDelete: Cascade)
+  pacienteId  Int       @map("paciente_id")
+  data        DateTime
+  refeicao    String?
+  porcao      String?
+  calorias    Int?
+  macros      Json?
+  nota        String?
+  criadoEm    DateTime  @default(now()) @map("criado_em")
+}
+
+model Pagamento {
+  id          Int         @id @default(autoincrement())
+  consulta    Consulta    @relation(fields: [consultaId], references: [id], onDelete: Cascade)
+  consultaId  Int         @map("consulta_id")
+  valor       Float
+  metodo      MetodoPagamento @default(PIX)
+  status      StatusPagamento @default(pendente)
+  dataPagamento DateTime? @map("data_pagamento")
+}
+
+model Documento {
+  id          Int       @id @default(autoincrement())
+  consulta    Consulta  @relation(fields: [consultaId], references: [id], onDelete: Cascade)
+  consultaId  Int       @map("consulta_id")
+  tipo        String?
+  urlArquivo  String?   @map("url_arquivo")
+  criadoEm    DateTime  @default(now()) @map("criado_em")
+}
+
+enum TipoConsulta {
+  presencial
+  online
+}
+
+enum StatusConsulta {
+  agendada
+  confirmada
+  cancelada
+}
+
+enum MetodoPagamento {
+  PIX
+  boleto
+  cartao
+}
+
+enum StatusPagamento {
+  pendente
+  pago
+  falha
+}
