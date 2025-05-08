@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Agendar Consulta - Nutri Manager</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav>
+    <a href="dashboard.html">Dashboard</a> |
+    <a href="pacientes.html">Pacientes</a> |
+    <a href="consulta-form.html">Agendar Consulta</a> |
+    <a href="diario.html">Diário</a> |
+    <button id="logoutBtn">Sair</button>
+  </nav>
+  <main>
+    <h1>Agendar Consulta</h1>
+    <form id="consultaForm">
+      <label>Paciente:</label>
+      <select name="pacienteId" required></select>
+      <label>Data e Hora:</label>
+      <input type="datetime-local" name="dataHora" required>
+      <label>Tipo:</label>
+      <select name="tipo" required>
+        <option value="presencial">Presencial</option>
+        <option value="online">Online</option>
+      </select>
+      <button type="submit">Agendar</button>
+    </form>
+  </main>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/consultas.js"></script>
+</body>
+</html>
