@@ -1,9 +1,13 @@
 // backend/src/controllers/diarioController.js
+
 const prisma = require('../config/prisma');
 
+/**
+ * POST /diario
+ * Cria uma entrada no diário alimentar.
+ */
 exports.create = async (req, res) => {
   const { pacienteId, data, refeicao, porcao, calorias, nota } = req.body;
-  // opcional: macros pode ser enviado também, omitido aqui
   try {
     const entry = await prisma.diario.create({
       data: {
@@ -12,8 +16,8 @@ exports.create = async (req, res) => {
         refeicao,
         porcao,
         calorias,
-        nota,
-      },
+        nota
+      }
     });
     res.status(201).json(entry);
   } catch (err) {
@@ -22,12 +26,16 @@ exports.create = async (req, res) => {
   }
 };
 
+/**
+ * GET /diario/:pacienteId
+ * Lista entradas do diário de um paciente.
+ */
 exports.listByPaciente = async (req, res) => {
   const pacienteId = parseInt(req.params.pacienteId);
   try {
     const entries = await prisma.diario.findMany({
       where: { pacienteId },
-      orderBy: { data: 'desc' },
+      orderBy: { data: 'desc' }
     });
     res.json(entries);
   } catch (err) {

@@ -1,33 +1,28 @@
+// Diário alimentar
 if (!localStorage.getItem('token')) location = 'login.html';
 document.getElementById('logoutBtn').onclick = () => { localStorage.clear(); location = 'login.html' };
 
-const form = document.getElementById('diarioForm');
-const select = form.pacienteId;
-
-async function loadPacientes() {
+const formD = document.getElementById('diarioForm');
+const selD = formD.pacienteId;
+(async()=>{
   const pacientes = await request('/pacientes');
   pacientes.forEach(p => {
-    const opt = document.createElement('option');
-    opt.value = p.id;
-    opt.textContent = p.nome;
-    select.appendChild(opt);
+    const o = document.createElement('option');
+    o.value = p.id; o.textContent = p.nome;
+    selD.append(o);
   });
-}
+})();
 
-form.onsubmit = async e => {
+formD.onsubmit = async e => {
   e.preventDefault();
-  const data = {
-    pacienteId: parseInt(form.pacienteId.value),
-    data: form.data.value,
-    refeicao: form.refeicao.value,
-    porcao: form.porcao.value,
-    calorias: parseInt(form.calorias.value),
-    nota: form.nota.value
-  };
-  // Você precisa criar uma rota no backend (ex: /diario) e adaptá-la para receber esse POST
-  await request('/diario', 'POST', data);
+  await request('/diario', 'POST', {
+    pacienteId: parseInt(selD.value),
+    data: formD.data.value,
+    refeicao: formD.refeicao.value,
+    porcao: formD.porcao.value,
+    calorias: parseInt(formD.calorias.value),
+    nota: formD.nota.value
+  });
   alert('Diário salvo!');
-  form.reset();
+  formD.reset();
 };
-
-loadPacientes();

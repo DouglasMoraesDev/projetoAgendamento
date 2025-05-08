@@ -1,28 +1,24 @@
+// Agendar consulta
 if (!localStorage.getItem('token')) location = 'login.html';
 document.getElementById('logoutBtn').onclick = () => { localStorage.clear(); location = 'login.html' };
 
-const form = document.getElementById('consultaForm');
-const select = form.pacienteId;
-
-async function loadPacientes() {
+const formC = document.getElementById('consultaForm');
+const sel = formC.pacienteId;
+(async()=>{
   const pacientes = await request('/pacientes');
   pacientes.forEach(p => {
-    const opt = document.createElement('option');
-    opt.value = p.id;
-    opt.textContent = p.nome;
-    select.appendChild(opt);
+    const o = document.createElement('option');
+    o.value = p.id; o.textContent = p.nome;
+    sel.append(o);
   });
-}
+})();
 
-form.onsubmit = async e => {
+formC.onsubmit = async e => {
   e.preventDefault();
-  const data = {
-    pacienteId: parseInt(form.pacienteId.value),
-    dataHora: form.dataHora.value,
-    tipo: form.tipo.value
-  };
-  await request('/consultas', 'POST', data);
+  await request('/consultas', 'POST', {
+    pacienteId: parseInt(sel.value),
+    dataHora: formC.dataHora.value,
+    tipo: formC.tipo.value
+  });
   location = 'dashboard.html';
 };
-
-loadPacientes();

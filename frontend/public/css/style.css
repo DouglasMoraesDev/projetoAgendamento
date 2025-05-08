@@ -1,56 +1,67 @@
 body {
-    font-family: Arial, sans-serif;
-    background: #f4f4f4;
-    margin: 0; padding: 0;
-  }
-  .container {
-    max-width: 400px;
-    margin: 80px auto;
-    background: #fff;
-    padding: 20px;
-    border-radius: 4px;
-  }
-  label {
-    display: block;
-    margin: 10px 0 5px;
-  }
-  input {
-    width: 100%;
-    padding: 8px;
-    box-sizing: border-box;
-  }
-  button {
-    margin-top: 15px;
-    width: 100%;
-    padding: 10px;
-    background: #28a745;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-  }
-  nav {
-    background: #333;
-    padding: 10px;
-    text-align: right;
-  }
-  nav button {
-    background: #c00;
-    color: #fff;
-    border: none;
-    padding: 8px 12px;
-    cursor: pointer;
-  }
-  main {
-    padding: 20px;
-  }
-  ul {
-    list-style: none;
-    padding: 0;
-  }
-  ul li {
-    background: #fff;
-    margin: 5px 0;
-    padding: 10px;
-    border-radius: 4px;
-  }
-  
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 400px;
+  margin: 80px auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 4px;
+}
+
+label {
+  display: block;
+  margin: 10px 0 5px;
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+button {
+  margin-top: 15px;
+  width: 100%;
+  padding: 10px;
+  background: #28a745;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+nav {
+  background: #333;
+  padding: 10px;
+  text-align: right;
+}
+
+nav a, nav button {
+  color: #fff;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+main {
+  padding: 20px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+ul li {
+  background: #fff;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 4px;
+}

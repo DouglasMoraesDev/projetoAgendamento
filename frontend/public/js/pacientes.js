@@ -1,31 +1,29 @@
-if (!localStorage.getItem('token')) window.location = 'login.html';
+// Listagem, editar e excluir pacientes
+if (!localStorage.getItem('token')) location = 'login.html';
+document.getElementById('logoutBtn').onclick = () => { localStorage.clear(); location = 'login.html' };
 
 const ul = document.getElementById('pacientesList');
-const btnNovo = document.getElementById('novoPacienteBtn');
-
-btnNovo.addEventListener('click', () => {
-  window.location = 'paciente-form.html';
-});
+document.getElementById('novoPacienteBtn').onclick = () => location = 'paciente-form.html';
 
 async function loadPacientes() {
-  const pacientes = await request('/pacientes');
+  const list = await request('/pacientes');
   ul.innerHTML = '';
-  pacientes.forEach(p => {
+  list.forEach(p => {
     const li = document.createElement('li');
     li.innerHTML = `
-      <strong>${p.nome}</strong> (${new Date(p.dataNasc).toLocaleDateString()})
-      <button data-id="${p.id}" class="view">Ver</button>
-      <button data-id="${p.id}" class="edit">Editar</button>
-      <button data-id="${p.id}" class="delete">Excluir</button>
+      <strong>${p.nome}</strong> (${p.email})
+      <button onclick="location='paciente-form.html?id=${p.id}'">Editar</button>
+      <button onclick="excluir(${p.id})">Excluir</button>
     `;
-    ul.appendChild(li);
+    ul.append(li);
   });
-  document.querySelectorAll('.delete').forEach(btn =>
-    btn.addEventListener('click', async e => {
-      await request(`/pacientes/${e.target.dataset.id}`, 'DELETE', null);
-      loadPacientes();
-    })
-  );
+}
+
+async function excluir(id) {
+  if (confirm('Confirma exclusão?')) {
+    await request(`/pacientes/${id}`, 'DELETE');
+    loadPacientes();
+  }
 }
 
 loadPacientes();

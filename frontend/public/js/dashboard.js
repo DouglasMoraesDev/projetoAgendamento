@@ -1,32 +1,29 @@
-if (!localStorage.getItem('token')) {
-  window.location = 'login.html';
-}
-
-// Logout
-document.getElementById('logoutBtn').addEventListener('click', () => {
-  localStorage.removeItem('token');
-  window.location = 'login.html';
-});
+// Dashboard: mostra pacientes e consultas
+if (!localStorage.getItem('token')) location = 'login.html';
+document.getElementById('logoutBtn').onclick = () => {
+  localStorage.clear();
+  location = 'login.html';
+};
 
 async function loadPacientes() {
-  const list = await request('/pacientes');
+  const pts = await request('/pacientes');
   const ul = document.getElementById('pacientesList');
   ul.innerHTML = '';
-  list.forEach(p => {
+  pts.forEach(p => {
     const li = document.createElement('li');
     li.textContent = `${p.nome} (${p.email})`;
-    ul.appendChild(li);
+    ul.append(li);
   });
 }
 
 async function loadConsultas() {
-  const list = await request('/consultas');
+  const cs = await request('/consultas');
   const ul = document.getElementById('consultasList');
   ul.innerHTML = '';
-  list.forEach(c => {
+  cs.forEach(c => {
     const li = document.createElement('li');
-    li.textContent = `${new Date(c.data_hora).toLocaleString()} – ${c.paciente_nome} [${c.status}]`;
-    ul.appendChild(li);
+    li.textContent = `${new Date(c.dataHora).toLocaleString()} – ${c.paciente_nome} [${c.status}]`;
+    ul.append(li);
   });
 }
 

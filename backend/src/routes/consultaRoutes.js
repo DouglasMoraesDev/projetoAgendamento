@@ -1,10 +1,13 @@
-const router = require('express').Router();
-const ctrl   = require('../controllers/consultaController');
-const authMw = require('../middlewares/authMiddleware');
+// backend/src/routes/consultaRoutes.js
 
-router.use(authMw);
-router.post('/',             ctrl.create);
-router.get('/',              ctrl.list);
-router.patch('/:id/status',  ctrl.updateStatus);
+const router = require('express').Router();
+const ctl    = require('../controllers/consultaController');
+const auth   = require('../middlewares/authMiddleware');
+
+router.use(auth);
+
+router.post('/',             ctl.create);
+router.get('/',              ctl.list);
+router.patch('/:id/status',  ctl.updateStatus);
 
 module.exports = router;
