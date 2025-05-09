@@ -8,7 +8,14 @@ const prisma = require('../config/prisma');
  */
 exports.create = async (req, res) => {
   const nutriId = req.user.id;
-  const data = { nutricionistaId: nutriId, ...req.body };
+  // Extrai data_nasc do body e converte para dataNasc (camelCase)
+  const { data_nasc, ...rest } = req.body;
+  const data = {
+    nutricionistaId: nutriId,
+    ...rest,
+    dataNasc: data_nasc ? new Date(data_nasc) : null
+  };
+
   const p = await prisma.paciente.create({ data });
   res.status(201).json({ id: p.id });
 };
@@ -43,9 +50,16 @@ exports.getOne = async (req, res) => {
  */
 exports.update = async (req, res) => {
   const id = parseInt(req.params.id);
+  // Mesma conversão de data_nasc → dataNasc
+  const { data_nasc, ...rest } = req.body;
+  const data = {
+    ...rest,
+    dataNasc: data_nasc ? new Date(data_nasc) : null
+  };
+
   await prisma.paciente.update({
     where: { id },
-    data: req.body
+    data
   });
   res.json({ message: 'Atualizado com sucesso' });
 };

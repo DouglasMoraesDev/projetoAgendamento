@@ -1,67 +1,168 @@
-body {
-  font-family: Arial, sans-serif;
-  background: #f4f4f4;
-  margin: 0;
-  padding: 0;
-}
-
-.container {
-  max-width: 400px;
-  margin: 80px auto;
-  background: #fff;
-  padding: 20px;
-  border-radius: 4px;
-}
-
-label {
-  display: block;
-  margin: 10px 0 5px;
-}
-
-input, textarea, select {
-  width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
-  margin-bottom: 10px;
-}
-
-button {
-  margin-top: 15px;
-  width: 100%;
-  padding: 10px;
-  background: #28a745;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-}
-
-nav {
-  background: #333;
-  padding: 10px;
-  text-align: right;
-}
-
-nav a, nav button {
-  color: #fff;
-  text-decoration: none;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  margin-left: 10px;
-}
-
-main {
-  padding: 20px;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-ul li {
-  background: #fff;
-  margin: 5px 0;
-  padding: 10px;
-  border-radius: 4px;
-}
+/* ========================
+   Variáveis de Tema
+   ======================== */
+   :root {
+    --color-bg: #f0f3f5;
+    --color-surface: #ffffff;
+    --color-primary: #2c3e50;
+    --color-secondary: #18bc9c;
+    --color-accent: #e74c3c;
+    --color-text: #333333;
+    --color-text-light: #ffffff;
+    --radius: 8px;
+    --transition: 0.3s ease;
+    --max-width: 800px;
+  }
+  
+  /* ========================
+     Reset & Base
+     ======================== */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.6;
+  }
+  
+  /* ========================
+     Container Centralizado
+     ======================== */
+  .container {
+    max-width: var(--max-width);
+    margin: 2rem auto;
+    padding: 1rem;
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+  
+  /* ========================
+     Cabeçalhos & Texto
+     ======================== */
+  h1, h2, h3 {
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+  }
+  
+  label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--color-primary);
+  }
+  
+  /* ========================
+     Inputs & Botões
+     ======================== */
+  input,
+  textarea,
+  select {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: var(--radius);
+    transition: border-color var(--transition);
+  }
+  
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    border-color: var(--color-secondary);
+  }
+  
+  button {
+    display: inline-block;
+    background: var(--color-secondary);
+    color: var(--color-text-light);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background var(--transition);
+  }
+  
+  button:hover {
+    background: var(--color-primary);
+  }
+  
+  /* ========================
+     Navegação
+     ======================== */
+  nav {
+    background: var(--color-primary);
+    padding: 1rem;
+  }
+  
+  nav a,
+  nav button {
+    color: var(--color-text-light);
+    text-decoration: none;
+    margin-right: 1rem;
+    font-weight: 600;
+    transition: color var(--transition);
+  }
+  
+  nav a:hover,
+  nav button:hover {
+    color: var(--color-secondary);
+  }
+  
+  /* ========================
+     Listas
+     ======================== */
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  ul li {
+    background: var(--color-surface);
+    margin-bottom: 0.75rem;
+    padding: 1rem;
+    border-radius: var(--radius);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  /* ========================
+     Layout Responsivo
+     ======================== */
+  @media (max-width: 600px) {
+    .container {
+      margin: 1rem;
+      padding: 1rem;
+    }
+  
+    nav {
+      text-align: center;
+    }
+  
+    nav a,
+    nav button {
+      display: inline-block;
+      margin: 0.5rem 0;
+    }
+  
+    ul li {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    ul li button {
+      margin-top: 0.5rem;
+      width: 100%;
+    }
+  }
+  

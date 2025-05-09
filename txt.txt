@@ -1,0 +1,57 @@
+ Gestão de Perfil e Configurações
+Página do nutricionista com edição de nome, email, foto de perfil, especialidade, senha.
+
+Configurações de conta (alterar senha, notificações, fuso horário).
+
+2. Agenda Calendário
+Visão calendário (mensal/semana/dia) das consultas, com drag-and-drop para reagendar.
+
+Filtro por status (agendadas/confirmadas/canceladas).
+
+Visão por paciente ou todos.
+
+3. Notificações e Lembretes
+Email/SMS automático para lembrar pacientes da consulta (ex.: 24 h antes).
+
+Dashboard de notificações no frontend para o nutricionista (ex.: consultas pendentes).
+
+4. Planos e Prescrições Nutricionais
+Módulo de planos de dieta: cadastrar dietas, refeições, metas calóricas.
+
+Associação de um plano a cada paciente e histórico de alterações.
+
+5. Upload e Gestão de Documentos
+Upload de arquivos (PDF, imagens) para cada consulta (exames, laudos).
+
+Visualização/remoção desses documentos no frontend.
+
+6. Pagamentos e Faturamento
+Integração com gateway (PIX, Stripe ou PagSeguro) para cobrança online.
+
+Geração de recibos e histórico de pagamentos por paciente/consulta.
+
+Relatórios financeiros simples (receita mensal, por paciente, por tipo de consulta).
+
+7. Relatórios e Estatísticas
+Gráficos de evolução de peso, calorias, macro nutrientes dos pacientes (recharts).
+
+KPIs no dashboard: número de pacientes ativos, consultas realizadas, faturamento.
+
+8. Segurança e Governança
+Validações de formulário no frontend e no backend (JOI ou Zod).
+
+Rate limiting, CORS bem configurado, helmet no Express.
+
+Logs de atividades (audit trail): quem criou/alterou o quê e quando.
+
+9. Mobile Responsivo / PWA
+Layout responsivo para celular/tablet
+
+Opcional: transformar em PWA para uso offline e notificações push.
+
+10. Infraestrutura e DevOps
+Dockerfile para backend e frontend.
+
+GitHub Actions para CI: rodar lint, testes unitários e de integração (Jest, Supertest).
+
+Deploy automático no Railway ou Vercel.

@@ -2,10 +2,11 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Paciente - Nutri Manager</title>
+  <title>Detalhes da Consulta</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <nav>
     <nav>
         <a href="dashboard.html">Dashboard</a> |
         <a href="pacientes.html">Pacientes</a> |
@@ -17,26 +18,21 @@
         <a href="consulta-detail.html">Detalhes da consulta</a>
         <button id="logoutBtn">Sair</button>
       </nav>
-  <main>
-    <h1 id="formTitle">Novo Paciente</h1>
-    <form id="pacienteForm">
-      <label>Nome:</label>
-      <input type="text" name="nome" required>
-      <label>Email:</label>
-      <input type="email" name="email" required>
-      <label>Data de Nascimento:</label>
-      <input type="date" name="data_nasc">
-      <label>Histórico:</label>
-      <textarea name="historico"></textarea>
-      <label>Alergias:</label>
-      <textarea name="alergias"></textarea>
-      <label>Objetivos:</label>
-      <textarea name="objetivos"></textarea>
-      <button type="submit">Salvar</button>
+  <main class="container">
+    <h1>Consulta</h1>
+    <div id="infoConsulta">
+      <!-- Data, tipo, status, paciente -->
+    </div>
+
+    <h2>Documentos</h2>
+    <form id="uploadForm" enctype="multipart/form-data">
+      <input type="file" name="file" required>
+      <button type="submit">Enviar Documento</button>
     </form>
+    <ul id="docsList"></ul>
   </main>
   <script src="js/api.js"></script>
   <script src="js/auth.js"></script>
-  <script src="js/paciente-form.js"></script>
+  <script src="js/consulta-detail.js"></script>
 </body>
 </html>

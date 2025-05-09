@@ -1,24 +1,23 @@
-
 {
     "name": "nutri-manager-backend",
     "version": "1.0.0",
     "description": "Backend do Nutri Manager",
     "main": "src/index.js",
     "scripts": {
-      "dev": "nodemon src/index.js",     
-      "start": "node src/index.js" 
+        "dev": "nodemon src/index.js",
+        "start": "node src/index.js"
     },
     "dependencies": {
-      "@prisma/client": "^6.7.0",    
-      "bcrypt": "^5.1.0",             
-      "cors": "^2.8.5",             
-      "dotenv": "^16.3.1",               
-      "express": "^4.18.2",             
-      "jsonwebtoken": "^9.0.0",         
-      "prisma": "^6.7.0"               
+        "@prisma/client": "^6.7.0",
+        "bcrypt": "^5.1.0",
+        "cors": "^2.8.5",
+        "dotenv": "^16.3.1",
+        "express": "^4.18.2",
+        "jsonwebtoken": "^9.0.0",
+        "multer": "^1.4.5-lts.2",
+        "prisma": "^6.7.0"
     },
     "devDependencies": {
-      "nodemon": "^3.1.0"                
+        "nodemon": "^3.1.0"
     }
-  }
-  
+}

@@ -56,3 +56,18 @@ exports.updateStatus = async (req, res) => {
   });
   res.json({ message: 'Status atualizado' });
 };
+
+
+/**
+ * PATCH /consultas/:id/reschedule
+ * Body: { dataHora }
+ */
+exports.reschedule = async (req, res) => {
+  const id = parseInt(req.params.id);
+  const { dataHora } = req.body;
+  await prisma.consulta.update({
+    where: { id },
+    data: { dataHora: new Date(dataHora) }
+  });
+  res.json({ message: 'Consulta reagendada' });
+};
