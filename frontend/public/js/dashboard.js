@@ -1,4 +1,4 @@
-// Dashboard: mostra pacientes e consultas
+// frontend/public/js/dashboard.js
 if (!localStorage.getItem('token')) location = 'login.html';
 document.getElementById('logoutBtn').onclick = () => {
   localStorage.clear();
@@ -22,7 +22,14 @@ async function loadConsultas() {
   ul.innerHTML = '';
   cs.forEach(c => {
     const li = document.createElement('li');
-    li.textContent = `${new Date(c.dataHora).toLocaleString()} – ${c.paciente_nome} [${c.status}]`;
+    li.innerHTML = `
+      <strong>${new Date(c.dataHora).toLocaleString()}</strong> – 
+      ${c.paciente_nome} [${c.status}]
+      <button class="detalhes-btn">Ver Detalhes</button>
+    `;
+    li.querySelector('.detalhes-btn').addEventListener('click', () => {
+      window.location.href = `consulta-detail.html?id=${c.id}`;
+    });
     ul.append(li);
   });
 }
