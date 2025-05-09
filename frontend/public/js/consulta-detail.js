@@ -1,75 +1,72 @@
 // public/js/consulta-detail.js
-import { get, BACKEND_URL } from './api.js';
 
-if (!localStorage.getItem('token')) {
-  window.location = 'login.html';
-}
+document.addEventListener('DOMContentLoaded', () => {
+  // 1) Recupere o ID da consulta atual.
+  //    Pode vir de um atributo data no HTML ou da URL.
+  const appointmentId = Number(
+    document
+      .querySelector('body')
+      .getAttribute('data-appointment-id')
+  );
+  
+  // Elementos do DOM
+  const listaEl   = document.getElementById('lista-anotacoes');
+  const textarea  = document.getElementById('nota-texto');
+  const btnSalvar = document.getElementById('btn-salvar-nota');
 
-document.getElementById('logoutBtn').onclick = () => {
-  localStorage.clear();
-  window.location = 'login.html';
-};
+  // Função: busca anotações e renderiza na lista
+  async function carregarAnotacoes() {
+    try {
+      const res = await fetch(
+        `/api/anotacoes?appointmentId=${appointmentId}`
+      );
+      if (!res.ok) throw new Error('Erro ao buscar notas');
 
-const infoEl = document.getElementById('infoConsulta');
-const docsUl = document.getElementById('docsList');
-const uploadForm = document.getElementById('uploadForm');
-const appointmentId = localStorage.getItem('selectedConsultaId');
+      const anotacoes = await res.json();
+      listaEl.innerHTML = ''; // limpa lista
 
-async function loadConsulta() {
-  try {
-    const list = await get('/appointments');
-    const c = list.find(x => String(x.id) === appointmentId);
-    if (!c) throw new Error('Consulta não encontrada');
-    infoEl.innerHTML = `
-      <p><strong>Cliente:</strong> ${c.clientNome}</p>
-      <p><strong>Data:</strong> ${new Date(c.dataHora).toLocaleString()}</p>
-      <p><strong>Tipo:</strong> ${c.tipo}</p>
-      <p><strong>Status:</strong> ${c.status}</p>
-    `;
-    await loadDocs();
-  } catch (err) {
-    alert(err.message);
-    window.location = 'consultas.html';
+      anotacoes.forEach((nota) => {
+        const li = document.createElement('li');
+        const data = new Date(nota.criadoEm).toLocaleString('pt-BR');
+        li.textContent = `[${data}] ${nota.texto}`;
+        listaEl.appendChild(li);
+      });
+    } catch (err) {
+      console.error(err);
+      alert('Não foi possível carregar as anotações.');
+    }
   }
-}
 
-async function loadDocs() {
-  try {
-    const docs = await get(`/appointments/${appointmentId}/documents`);
-    docsUl.innerHTML = docs
-    .map(d => {
-        // nome do arquivo só para exibir
-        const name = d.urlArquivo.split('/').pop();
-        // URL completa: backend + caminho /uploads/filename
-          const url  = `${BACKEND_URL}${d.urlArquivo}`;
-        return `<li><a href="${url}" target="_blank">${name}</a></li>`;
-         })
-      .join('');
-  } catch {
-    docsUl.innerHTML = '<li>Erro ao carregar documentos.</li>';
-  }
-}
+  // Função: envia nova anotação para o backend
+  async function salvarAnotacao() {
+    const texto = textarea.value.trim();
+    if (!texto) {
+      return alert('Por favor, digite uma anotação antes de salvar.');
+    }
 
-// Upload de documento
-uploadForm.addEventListener('submit', async e => {
-  e.preventDefault();
-  const data = new FormData(uploadForm);
-  try {
-    const res = await fetch(
-      `http://localhost:3000/api/appointments/${appointmentId}/documents`,
-      {
+    try {
+      const res = await fetch('/api/anotacoes', {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
-        body: data
-      }
-    );
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    alert('Documento enviado!');
-    uploadForm.reset();
-    loadDocs();
-  } catch (err) {
-    alert('Falha no upload: ' + err.message);
-  }
-});
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ appointmentId, texto }),
+      });
 
-loadConsulta();
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Erro ao salvar anotação');
+      }
+
+      textarea.value = '';     // limpa campo
+      carregarAnotacoes();     // recarrega lista
+    } catch (err) {
+      console.error(err);
+      alert(`Erro: ${err.message}`);
+    }
+  }
+
+  // Evento de clique no botão Salvar
+  btnSalvar.addEventListener('click', salvarAnotacao);
+
+  // Carrega as anotações ao abrir a página
+  carregarAnotacoes();
+});

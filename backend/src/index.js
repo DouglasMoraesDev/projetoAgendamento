@@ -9,27 +9,45 @@ const port = process.env.PORT || 3000;
 
 // Middlewares globais
 app.use(cors());
-app.use(express.json()); // garante que req.body seja populado
+app.use(express.json()); // Parseia JSON no body das requisições
 
 // Serve uploads de documentos/imagens
-app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+app.use(
+  '/uploads',
+  express.static(path.join(__dirname, '..', 'uploads'))
+);
 
 // Montagem das rotas
-app.use('/api/auth',         require('./routes/authRoutes'));
-app.use('/api/clients',      require('./routes/clientRoutes'));
+
+// Autenticação (login, registro, etc.)
+app.use('/api/auth', require('./routes/authRoutes'));
+
+// Clientes (CRUD de pacientes)
+app.use('/api/clients', require('./routes/clientRoutes'));
+
+// Profissionais (perfil, atualização de dados)
+app.use('/api/profile', require('./routes/professionalRoutes'));
+
+// Diário alimentar
+app.use('/api/diary', require('./routes/diarioRoutes'));
+
+// Consultas (agendar, listar, atualizar status)
 app.use('/api/appointments', require('./routes/appointmentRoutes'));
-// rotas de documentos ficam aninhadas em appointments
+
+// Documentos vinculados a uma consulta
 app.use(
   '/api/appointments/:appointmentId/documents',
-   require('./routes/documentRoutes')
+  require('./routes/documentRoutes')
 );
-app.use('/api/diary',        require('./routes/diarioRoutes'));
-app.use('/api/profile',      require('./routes/professionalRoutes'));
+
+// Anotações Clínicas (novo módulo)
+// Criar e listar anotações atreladas a uma consulta
+app.use('/api/anotacoes', require('./routes/anotacaoRoutes'));
 
 // Health check
 app.get('/', (req, res) => res.send('API Health Scheduler OK'));
 
-// Erro 404 para rotas não encontradas
+// 404 para endpoints não encontrados
 app.use((req, res) => {
   res.status(404).json({ message: 'Endpoint não encontrado' });
 });

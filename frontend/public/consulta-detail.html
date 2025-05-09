@@ -1,35 +1,33 @@
+<!-- public/consulta-detail.html -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Detalhes da Consulta</title>
-  <link rel="stylesheet" href="css/style.css">
+  <!-- estilos, meta tags, etc. -->
 </head>
 <body>
-  <nav>
-    <a href="dashboard.html">Dashboard</a> |
-    <a href="clients.html">Clientes</a> |
-    <a href="appointment-form.html">Agendar Consulta</a> |
-    <a href="diario.html">Diário</a> |
-    <a href="calendar.html">Agenda</a> |
-    <a href="profile.html">Perfil</a> |
-    <a href="settings.html">Configurações</a> |
-    <button id="logoutBtn">Sair</button>
-  </nav>
-    <button id="logoutBtn">Sair</button>
-  </nav>
-  <main class="container">
-    <h1>Detalhes da Consulta</h1>
-    <div id="infoConsulta"></div>
-    <h2>Documentos</h2>
-    <form id="uploadForm" enctype="multipart/form-data">
-      <input type="file" name="file" required>
-      <button type="submit">Enviar Documento</button>
-    </form>
-    <ul id="docsList"></ul>
-  </main>
+  <!-- ... seção de detalhes gerais da consulta ... -->
 
-  <script type="module" src="js/api.js"></script>
-  <script type="module" src="js/consulta-detail.js"></script>
+  <!-- Seção de Anotações Clínicas -->
+  <section id="anotacoes-section">
+    <h3>Anotações Clínicas</h3>
+    <!-- Área de input: textarea + botão -->
+    <div class="anotacao-input">
+      <textarea
+        id="nota-texto"
+        rows="4"
+        placeholder="Digite aqui sua anotação..."
+      ></textarea>
+      <button id="btn-salvar-nota">
+        Salvar Anotação
+      </button>
+    </div>
+    <!-- Lista onde as notas serão inseridas -->
+    <ul id="lista-anotacoes"></ul>
+  </section>
+
+  <!-- Seu script geral (assegure-se de importar o detalhe abaixo após carregar o appointmentId) -->
+  <script src="/js/consulta-detail.js"></script>
 </body>
 </html>
