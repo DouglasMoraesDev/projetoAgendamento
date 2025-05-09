@@ -1,17 +1,14 @@
-// backend/src/routes/consultaRoutes.js
+// backend/src/routes/appointmentRoutes.js
 
 const router = require('express').Router();
-const ctl    = require('../controllers/consultaController');
 const auth   = require('../middlewares/authMiddleware');
+// Atenção aqui: o nome deve bater com o arquivo em controllers/
+const ctl    = require('../controllers/appointmentController');
 
 router.use(auth);
-
 router.post('/',             ctl.create);
 router.get('/',              ctl.list);
 router.patch('/:id/status',  ctl.updateStatus);
 router.patch('/:id/reschedule', ctl.reschedule);
-
-// Documentos de cada consulta
-router.use('/:consultaId/documentos', require('./documentRoutes'));
 
 module.exports = router;

@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Detalhes da Consulta</title>
+  <title>Cliente</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -17,18 +17,24 @@
     <button id="logoutBtn">Sair</button>
   </nav>
   <main class="container">
-    <h1>Consulta</h1>
-    <div id="infoConsulta"></div>
-    <h2>Documentos</h2>
-    <form id="uploadForm" enctype="multipart/form-data">
-      <input type="file" name="file" required>
-      <button type="submit">Enviar Documento</button>
+    <h1 id="formTitle">Novo Cliente</h1>
+    <form id="clientForm">
+      <label>Nome:</label><input type="text" name="nome" required>
+      <label>Email:</label><input type="email" name="email" required>
+      <label>CPF:</label><input type="text" name="cpf" required>
+      <!-- demais campos... -->
+      <label>Status Cadastro:</label>
+      <select name="statusCadastro">
+        <option value="ativo">Ativo</option>
+        <option value="inativo">Inativo</option>
+        <option value="bloqueado">Bloqueado</option>
+      </select>
+      <button type="submit">Salvar</button>
     </form>
-    <ul id="docsList"></ul>
   </main>
 
   <script type="module" src="js/api.js"></script>
   <script type="module" src="js/auth.js"></script>
-  <script type="module" src="js/consulta-detail.js"></script>
+  <script type="module" src="js/clients-form.js"></script>
 </body>
 </html>

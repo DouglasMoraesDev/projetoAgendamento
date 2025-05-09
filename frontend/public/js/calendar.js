@@ -1,21 +1,34 @@
-// frontend/public/js/calendar.js
+// public/js/calendar.js
+import { get, request } from './api.js'; // agora usando get() para clareza
 
-if (!localStorage.getItem('token')) location = 'login.html';
+// Verifica token e logout
+if (!localStorage.getItem('token')) {
+  window.location = 'login.html';
+}
 document.getElementById('logoutBtn').onclick = () => {
   localStorage.clear();
-  location = 'login.html';
+  window.location = 'login.html';
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
   const Calendar = FullCalendar.Calendar;
   const calendarEl = document.getElementById('calendar');
 
-  // carrega eventos
-  const consultas = await request('/consultas');
+  let consultas = [];
+  try {
+    // Busca todas as consultas do profissional logado
+    consultas = await get('/api/appointments'); // <-- ajustado para usar `get`
+  } catch (err) {
+    console.error('Erro ao carregar consultas:', err);
+    alert('Não foi possível carregar agenda.');
+    return;
+  }
+
+  // Mapeia para eventos do FullCalendar
   const events = consultas.map(c => ({
-    id: c.id,
-    title: c.paciente_nome,
-    start: c.dataHora,
+    id: c.id.toString(),
+    title: c.cliente?.nome || 'Sem nome', // protege contra null
+    start: new Date(c.dataHora).toISOString(),
     color: (() => {
       if (c.status === 'agendada')   return 'blue';
       if (c.status === 'confirmada') return 'green';
@@ -33,14 +46,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     events,
     editable: true,
     eventDrop: async info => {
+      const newDate = info.event.start.toISOString();
       try {
-        await request(`/consultas/${info.event.id}/reschedule`, 'PATCH', {
-          dataHora: info.event.start.toISOString()
-        });
+        // PATCH em /api/appointments/:id/reschedule
+        await request(
+          `/api/appointments/${info.event.id}/reschedule`,
+          'PATCH',
+          { dataHora: newDate }
+        );
         alert('Consulta reagendada!');
       } catch (err) {
+        console.error('Erro ao reagendar:', err);
         alert('Erro ao reagendar: ' + err.message);
-        info.revert();
+        info.revert(); // desfaz o drag caso falhe
       }
     }
   });

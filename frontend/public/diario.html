@@ -2,25 +2,25 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Diário Alimentar - Nutri Manager</title>
+  <title>Diário Alimentar</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <nav>
     <a href="dashboard.html">Dashboard</a> |
-    <a href="pacientes.html">Pacientes</a> |
-    <a href="consulta-form.html">Agendar Consulta</a> |
+    <a href="clients.html">Clientes</a> |
+    <a href="appointment-form.html">Agendar Consulta</a> |
     <a href="diario.html">Diário</a> |
     <a href="calendar.html">Agenda</a> |
     <a href="profile.html">Perfil</a> |
     <a href="settings.html">Configurações</a> |
     <button id="logoutBtn">Sair</button>
   </nav>
-  <main>
+  <main class="container">
     <h1>Diário Alimentar</h1>
     <form id="diarioForm">
-      <label>Paciente:</label>
-      <select name="pacienteId" required></select>
+      <label>Cliente:</label>
+      <select name="clientId" required></select>
       <label>Data:</label>
       <input type="date" name="data" required>
       <label>Refeição:</label>
@@ -34,8 +34,9 @@
       <button type="submit">Salvar</button>
     </form>
   </main>
-  <script src="js/api.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/diario.js"></script>
+
+  <script type="module" src="js/api.js"></script>
+  <script type="module" src="js/auth.js"></script>
+  <script type="module" src="js/diario.js"></script>
 </body>
 </html>

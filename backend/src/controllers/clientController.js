@@ -1,10 +1,7 @@
-// backend/src/controllers/pacienteController.js
-
 const prisma = require('../config/prisma');
 
 exports.create = async (req, res) => {
-  const nutriId = req.user.id;
-  // Extrai todos os campos do body
+  const professionalId = req.user.id;
   const {
     nome, email, cpf, rg, telefone,
     endereco, numero, complemento, bairro, cidade, estado, cep,
@@ -13,9 +10,8 @@ exports.create = async (req, res) => {
     statusCadastro, consentimentoLGPD, preferenciasNotificacao
   } = req.body;
 
-  // Monta o objeto data para o Prisma
   const data = {
-    nutricionistaId: nutriId,
+    professionalId,
     nome,
     email,
     cpf,
@@ -37,18 +33,18 @@ exports.create = async (req, res) => {
     numeroCarteirinha,
     valorSessao: valorSessao ? parseFloat(valorSessao) : undefined,
     statusCadastro,
-    consentimentoLGPD: consentimentoLGPD === 'true' || consentimentoLGPD === true,
+    consentimentoLGPD: consentimentoLGPD === 'true',
     preferenciasNotificacao: preferenciasNotificacao ? JSON.parse(preferenciasNotificacao) : undefined
   };
 
-  const p = await prisma.paciente.create({ data });
-  res.status(201).json({ id: p.id });
+  const client = await prisma.client.create({ data });
+  res.status(201).json({ id: client.id });
 };
 
 exports.list = async (req, res) => {
-  const nutriId = req.user.id;
-  const list = await prisma.paciente.findMany({
-    where: { nutricionistaId: nutriId },
+  const professionalId = req.user.id;
+  const list = await prisma.client.findMany({
+    where: { professionalId },
     orderBy: { nome: 'asc' }
   });
   res.json(list);
@@ -56,14 +52,13 @@ exports.list = async (req, res) => {
 
 exports.getOne = async (req, res) => {
   const id = parseInt(req.params.id);
-  const p = await prisma.paciente.findUnique({ where: { id } });
-  if (!p) return res.status(404).json({ message: 'Não encontrado' });
-  res.json(p);
+  const c = await prisma.client.findUnique({ where: { id } });
+  if (!c) return res.status(404).json({ message: 'Não encontrado' });
+  res.json(c);
 };
 
 exports.update = async (req, res) => {
   const id = parseInt(req.params.id);
-  // Reaproveitamos a extração de campos como no create
   const {
     nome, email, cpf, rg, telefone,
     endereco, numero, complemento, bairro, cidade, estado, cep,
@@ -94,16 +89,16 @@ exports.update = async (req, res) => {
     numeroCarteirinha,
     valorSessao: valorSessao ? parseFloat(valorSessao) : undefined,
     statusCadastro,
-    consentimentoLGPD: consentimentoLGPD === 'true' || consentimentoLGPD === true,
+    consentimentoLGPD: consentimentoLGPD === 'true',
     preferenciasNotificacao: preferenciasNotificacao ? JSON.parse(preferenciasNotificacao) : undefined
   };
 
-  await prisma.paciente.update({ where: { id }, data });
+  await prisma.client.update({ where: { id }, data });
   res.json({ message: 'Atualizado com sucesso' });
 };
 
 exports.remove = async (req, res) => {
   const id = parseInt(req.params.id);
-  await prisma.paciente.delete({ where: { id } });
+  await prisma.client.delete({ where: { id } });
   res.json({ message: 'Removido com sucesso' });
 };

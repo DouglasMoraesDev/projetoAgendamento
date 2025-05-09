@@ -2,21 +2,21 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Configurações - Nutri Manager</title>
+  <title>Configurações</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <nav>
     <a href="dashboard.html">Dashboard</a> |
-    <a href="pacientes.html">Pacientes</a> |
-    <a href="consulta-form.html">Agendar Consulta</a> |
+    <a href="clients.html">Clientes</a> |
+    <a href="appointment-form.html">Agendar Consulta</a> |
     <a href="diario.html">Diário</a> |
     <a href="calendar.html">Agenda</a> |
     <a href="profile.html">Perfil</a> |
     <a href="settings.html">Configurações</a> |
     <button id="logoutBtn">Sair</button>
   </nav>
-  <main>
+  <main class="container">
     <h1>Alterar Senha</h1>
     <form id="pwdForm">
       <label>Senha Atual:</label>
@@ -26,8 +26,9 @@
       <button type="submit">Alterar Senha</button>
     </form>
   </main>
-  <script src="js/api.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/settings.js"></script>
+
+  <script type="module" src="js/api.js"></script>
+  <script type="module" src="js/auth.js"></script>
+  <script type="module" src="js/settings.js"></script>
 </body>
 </html>

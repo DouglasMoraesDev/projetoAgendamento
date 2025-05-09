@@ -1,5 +1,7 @@
 // frontend/public/js/consultas.js
 
+import { request } from './api.js';
+
 // Redireciona sem token
 if (!localStorage.getItem('token')) {
   alert('Faça login primeiro.');
@@ -15,18 +17,20 @@ document.getElementById('logoutBtn').onclick = () => {
 const form = document.getElementById('consultaForm');
 const selectPac = form.pacienteId;
 
-// Carrega pacientes no <select>
-(async () => {
+// Carrega clientes no <select>
+;(async () => {
   try {
-    const pacientes = await request('/pacientes');
-    pacientes.forEach(p => {
+    // Chamada agora para /api/clients
+    const clientes = await request('/api/clients');
+    clientes.forEach(c => {
       const opt = document.createElement('option');
-      opt.value = p.id;
-      opt.textContent = p.nome;
+      opt.value = c.id;
+      opt.textContent = c.nome;
       selectPac.append(opt);
     });
   } catch (err) {
-    alert('Erro ao carregar pacientes: ' + err.message);
+    alert('Erro ao carregar clientes: ' + err.message);
+    console.error(err);
   }
 })();
 
@@ -34,14 +38,14 @@ form.addEventListener('submit', async e => {
   e.preventDefault();
 
   const payload = {
-    pacienteId: parseInt(selectPac.value),
+    clientId:   parseInt(selectPac.value),  // campo renomeado
     dataHora:   form.dataHora.value,
     tipo:       form.tipo.value
   };
 
   try {
-    const res = await request('/consultas', 'POST', payload);
-    // Se o backend retornar { id }, confirma
+    // POST para /api/appointments
+    const res = await request('/api/appointments', 'POST', payload);
     if (res.id) {
       alert('Consulta agendada: ID ' + res.id);
       window.location = 'dashboard.html';

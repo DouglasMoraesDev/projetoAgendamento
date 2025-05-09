@@ -1,47 +1,67 @@
 // backend/src/controllers/authController.js
 
+/**
+ * Controlador de autenticação: registro e login de profissionais
+ */
+
 const bcrypt = require('bcrypt');
 const prisma = require('../config/prisma');
-const { sign } = require('../utils/jwt');
+const { sign } = require('../utils/jwt');  // função para gerar JWT
 
 /**
- * POST /auth/register
- * Corpo: { nome, email, senha }
+ * POST /api/auth/register
+ * Registra um novo Professional.
+ * Body: { nome, email, senha }
  */
 exports.register = async (req, res) => {
   const { nome, email, senha } = req.body;
-  if (!nome || !email || !senha)
+  if (!nome || !email || !senha) {
     return res.status(400).json({ message: 'Dados faltando' });
+  }
 
-  // Verifica se já existe
-  const exists = await prisma.nutricionista.findUnique({ where: { email } });
-  if (exists)
+  // Verifica se já existe um profissional com esse email
+  const exists = await prisma.professional.findUnique({ where: { email } });
+  if (exists) {
     return res.status(400).json({ message: 'Email já cadastrado' });
+  }
 
-  // Cria hash da senha
+  // Gera hash da senha
   const senhaHash = await bcrypt.hash(senha, 10);
-  // Persiste no banco
-  const user = await prisma.nutricionista.create({
-    data: { nome, email, senhaHash }
+
+  // Cria o registro no banco
+  const user = await prisma.professional.create({
+    data: { nome, email, senhaHash, tipo: 'nutricionista' } // tipo padrão
   });
 
-  res.status(201).json({ id: user.id, nome: user.nome, email: user.email });
+  // Gera e devolve o token JWT
+  const token = sign({ id: user.id, email: user.email });
+  res.status(201).json({ token });
 };
 
 /**
- * POST /auth/login
- * Corpo: { email, senha }
+ * POST /api/auth/login
+ * Autentica um Professional existente.
+ * Body: { email, senha }
  */
 exports.login = async (req, res) => {
   const { email, senha } = req.body;
-  const user = await prisma.nutricionista.findUnique({ where: { email } });
-  if (!user) return res.status(400).json({ message: 'Usuário não encontrado' });
+  if (!email || !senha) {
+    return res.status(400).json({ message: 'Email e senha são obrigatórios' });
+  }
 
-  // Valida senha
+  // Busca o profissional pelo email
+  const user = await prisma.professional.findUnique({ where: { email } });
+  if (!user) {
+    return res.status(401).json({ message: 'Credenciais inválidas' });
+  }
+
+  // Compara a senha informada com o hash armazenado
   const valid = await bcrypt.compare(senha, user.senhaHash);
-  if (!valid) return res.status(400).json({ message: 'Senha inválida' });
+  if (!valid) {
+    return res.status(401).json({ message: 'Credenciais inválidas' });
+  }
 
-  // Gera token
+  // Gera e devolve o token JWT
   const token = sign({ id: user.id, email: user.email });
   res.json({ token });
 };

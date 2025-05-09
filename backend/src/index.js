@@ -1,5 +1,3 @@
-// backend/src/index.js
-
 const express = require('express');
 const cors    = require('cors');
 const path    = require('path');
@@ -12,18 +10,18 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Serve arquivos estáticos de upload (e.g. documentos)
+// Serve arquivos estáticos (ex: PDFs, imagens de uploads)
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
-// Rotas da API
-app.use('/auth',      require('./routes/authRoutes'));
-app.use('/pacientes', require('./routes/pacienteRoutes'));
-app.use('/consultas', require('./routes/consultaRoutes'));  // já inclui documentos em subrota
-app.use('/diario',    require('./routes/diarioRoutes'));
-app.use('/profile',   require('./routes/profileRoutes'));
+// Rotas principais da API
+app.use('/api/auth',        require('./routes/authRoutes'));
+app.use('/api/clients',     require('./routes/clientRoutes'));
+app.use('/api/appointments', require('./routes/documentRoutes'));  // <- corrigido
+app.use('/api/diary',       require('./routes/diarioRoutes'));
+app.use('/api/profile',     require('./routes/professionalRoutes'));
 
-// Rota de sanity check
-app.get('/', (req, res) => res.send('API Nutri Manager OK'));
+// Teste de saúde da API
+app.get('/', (req, res) => res.send('API Health Scheduler OK'));
 
 // Inicia o servidor
 app.listen(port, () => {

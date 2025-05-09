@@ -1,41 +1,43 @@
-// frontend/public/js/profile.js
-
-if (!localStorage.getItem('token')) location = 'login.html';
-document.getElementById('logoutBtn').onclick = () => {
-  localStorage.clear();
-  location = 'login.html';
-};
+// public/js/profile.js
+import { get, put } from './api.js';
 
 const form = document.getElementById('profileForm');
 
-(async () => {
+// Carrega os dados do perfil do profissional logado
+async function loadProfile() {
   try {
-    const u = await request('/profile');
-    form.nome.value         = u.nome;
-    form.email.value        = u.email;
-    form.fotoUrl.value      = u.fotoUrl || '';
-    form.especialidade.value = u.especialidade || '';
-    form.timezone.value     = u.timezone || '';
-    form.notificacoes.value = u.notificacoes.toString();
+    const user = await get('/api/profile');
+    form.nome.value = user.nome;
+    form.email.value = user.email;
+    form.fotoUrl.value = user.fotoUrl || '';
+    form.tipo.value = user.tipo || '';
+    form.timezone.value = user.timezone || '';
+    form.notificacoes.value = user.notificacoes || '';
   } catch (err) {
-    alert('Erro ao carregar perfil: ' + err.message);
+    console.error('Erro ao carregar perfil:', err);
+    alert('Erro ao carregar perfil');
   }
-})();
+}
 
-form.onsubmit = async e => {
+// Envia alterações no formulário para a API
+form.addEventListener('submit', async e => {
   e.preventDefault();
-  const data = {
-    nome: form.nome.value.trim(),
-    email: form.email.value.trim(),
-    fotoUrl: form.fotoUrl.value.trim() || null,
-    especialidade: form.especialidade.value.trim() || null,
-    timezone: form.timezone.value.trim() || null,
-    notificacoes: form.notificacoes.value === 'true'
+  const payload = {
+    nome: form.nome.value,
+    email: form.email.value,
+    fotoUrl: form.fotoUrl.value,
+    tipo: form.tipo.value,
+    timezone: form.timezone.value,
+    notificacoes: form.notificacoes.value
   };
+
   try {
-    await request('/profile', 'PUT', data);
-    alert('Perfil atualizado!');
+    await put('/api/profile', payload);
+    alert('Perfil atualizado com sucesso!');
   } catch (err) {
-    alert('Erro ao salvar perfil: ' + err.message);
+    console.error('Erro ao atualizar perfil:', err);
+    alert('Erro ao atualizar perfil');
   }
-};
+});
+
+loadProfile();

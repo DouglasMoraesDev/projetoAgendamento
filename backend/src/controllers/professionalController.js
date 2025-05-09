@@ -1,5 +1,3 @@
-// backend/src/controllers/profileController.js
-
 const bcrypt = require('bcrypt');
 const prisma = require('../config/prisma');
 
@@ -8,13 +6,13 @@ const prisma = require('../config/prisma');
  */
 exports.getProfile = async (req, res) => {
   const { id } = req.user;
-  const user = await prisma.nutricionista.findUnique({
+  const user = await prisma.professional.findUnique({
     where: { id },
     select: {
       nome: true,
       email: true,
       fotoUrl: true,
-      especialidade: true,
+      tipo: true,
       timezone: true,
       notificacoes: true
     }
@@ -24,7 +22,6 @@ exports.getProfile = async (req, res) => {
 
 /**
  * PUT /profile
- * Body: { nome, email, fotoUrl, especialidade, timezone, notificacoes }
  */
 exports.updateProfile = async (req, res) => {
   const { id } = req.user;
@@ -32,36 +29,28 @@ exports.updateProfile = async (req, res) => {
     nome: req.body.nome,
     email: req.body.email,
     fotoUrl: req.body.fotoUrl,
-    especialidade: req.body.especialidade,
+    tipo: req.body.tipo,
     timezone: req.body.timezone,
-    notificacoes: req.body.notificacoes
+    notificacoes: req.body.notificacoes === 'true' || req.body.notificacoes === true
   };
-  const updated = await prisma.nutricionista.update({
+  const updated = await prisma.professional.update({
     where: { id },
     data
   });
-  res.json({
-    nome: updated.nome,
-    email: updated.email,
-    fotoUrl: updated.fotoUrl,
-    especialidade: updated.especialidade,
-    timezone: updated.timezone,
-    notificacoes: updated.notificacoes
-  });
+  res.json(updated);
 };
 
 /**
  * PUT /profile/password
- * Body: { senhaAtual, novaSenha }
  */
 exports.changePassword = async (req, res) => {
   const { id } = req.user;
   const { senhaAtual, novaSenha } = req.body;
-  const user = await prisma.nutricionista.findUnique({ where: { id } });
+  const user = await prisma.professional.findUnique({ where: { id } });
   const ok = await bcrypt.compare(senhaAtual, user.senhaHash);
   if (!ok) return res.status(400).json({ message: 'Senha atual incorreta' });
   const novaHash = await bcrypt.hash(novaSenha, 10);
-  await prisma.nutricionista.update({
+  await prisma.professional.update({
     where: { id },
     data: { senhaHash: novaHash }
   });

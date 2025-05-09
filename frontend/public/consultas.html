@@ -2,8 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Agenda</title>
-  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+  <title>Consultas</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -17,13 +16,13 @@
     <a href="settings.html">Configurações</a> |
     <button id="logoutBtn">Sair</button>
   </nav>
-  <main>
-    <div id="calendar"></div>
+  <main class="container">
+    <h1>Consultas Agendadas</h1>
+    <ul id="consultasList"></ul>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
   <script type="module" src="js/api.js"></script>
   <script type="module" src="js/auth.js"></script>
-  <script type="module" src="js/calendar.js"></script>
+  <script type="module" src="js/consultas.js"></script>
 </body>
 </html>
