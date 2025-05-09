@@ -2,28 +2,49 @@
 
 const prisma = require('../config/prisma');
 
-/**
- * POST /pacientes
- * Cria um paciente associado ao nutricionista logado.
- */
 exports.create = async (req, res) => {
   const nutriId = req.user.id;
-  // Extrai data_nasc do body e converte para dataNasc (camelCase)
-  const { data_nasc, ...rest } = req.body;
+  // Extrai todos os campos do body
+  const {
+    nome, email, cpf, rg, telefone,
+    endereco, numero, complemento, bairro, cidade, estado, cep,
+    data_nasc, historico, alergias, objetivos,
+    profissao, convenio, numeroCarteirinha, valorSessao,
+    statusCadastro, consentimentoLGPD, preferenciasNotificacao
+  } = req.body;
+
+  // Monta o objeto data para o Prisma
   const data = {
     nutricionistaId: nutriId,
-    ...rest,
-    dataNasc: data_nasc ? new Date(data_nasc) : null
+    nome,
+    email,
+    cpf,
+    rg,
+    telefone,
+    endereco,
+    numero,
+    complemento,
+    bairro,
+    cidade,
+    estado,
+    cep,
+    dataNasc: data_nasc ? new Date(data_nasc) : undefined,
+    historico,
+    alergias,
+    objetivos,
+    profissao,
+    convenio,
+    numeroCarteirinha,
+    valorSessao: valorSessao ? parseFloat(valorSessao) : undefined,
+    statusCadastro,
+    consentimentoLGPD: consentimentoLGPD === 'true' || consentimentoLGPD === true,
+    preferenciasNotificacao: preferenciasNotificacao ? JSON.parse(preferenciasNotificacao) : undefined
   };
 
   const p = await prisma.paciente.create({ data });
   res.status(201).json({ id: p.id });
 };
 
-/**
- * GET /pacientes
- * Lista todos os pacientes do nutricionista.
- */
 exports.list = async (req, res) => {
   const nutriId = req.user.id;
   const list = await prisma.paciente.findMany({
@@ -33,10 +54,6 @@ exports.list = async (req, res) => {
   res.json(list);
 };
 
-/**
- * GET /pacientes/:id
- * Detalha um paciente.
- */
 exports.getOne = async (req, res) => {
   const id = parseInt(req.params.id);
   const p = await prisma.paciente.findUnique({ where: { id } });
@@ -44,30 +61,47 @@ exports.getOne = async (req, res) => {
   res.json(p);
 };
 
-/**
- * PUT /pacientes/:id
- * Atualiza dados do paciente.
- */
 exports.update = async (req, res) => {
   const id = parseInt(req.params.id);
-  // Mesma conversão de data_nasc → dataNasc
-  const { data_nasc, ...rest } = req.body;
+  // Reaproveitamos a extração de campos como no create
+  const {
+    nome, email, cpf, rg, telefone,
+    endereco, numero, complemento, bairro, cidade, estado, cep,
+    data_nasc, historico, alergias, objetivos,
+    profissao, convenio, numeroCarteirinha, valorSessao,
+    statusCadastro, consentimentoLGPD, preferenciasNotificacao
+  } = req.body;
+
   const data = {
-    ...rest,
-    dataNasc: data_nasc ? new Date(data_nasc) : null
+    nome,
+    email,
+    cpf,
+    rg,
+    telefone,
+    endereco,
+    numero,
+    complemento,
+    bairro,
+    cidade,
+    estado,
+    cep,
+    dataNasc: data_nasc ? new Date(data_nasc) : undefined,
+    historico,
+    alergias,
+    objetivos,
+    profissao,
+    convenio,
+    numeroCarteirinha,
+    valorSessao: valorSessao ? parseFloat(valorSessao) : undefined,
+    statusCadastro,
+    consentimentoLGPD: consentimentoLGPD === 'true' || consentimentoLGPD === true,
+    preferenciasNotificacao: preferenciasNotificacao ? JSON.parse(preferenciasNotificacao) : undefined
   };
 
-  await prisma.paciente.update({
-    where: { id },
-    data
-  });
+  await prisma.paciente.update({ where: { id }, data });
   res.json({ message: 'Atualizado com sucesso' });
 };
 
-/**
- * DELETE /pacientes/:id
- * Remove um paciente.
- */
 exports.remove = async (req, res) => {
   const id = parseInt(req.params.id);
   await prisma.paciente.delete({ where: { id } });

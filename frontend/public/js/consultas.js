@@ -1,80 +1,55 @@
-// frontend/public/js/consulta-detail.js
+// frontend/public/js/consultas.js
 
-// Verifica autenticação
-if (!localStorage.getItem('token')) location = 'login.html';
-document.getElementById('logoutBtn').onclick = () => {
-  localStorage.clear();
-  location = 'login.html';
-};
-
-const params = new URLSearchParams(location.search);
-const id     = params.get('id');
-const infoEl = document.getElementById('infoConsulta');
-const docsUl = document.getElementById('docsList');
-const form   = document.getElementById('uploadForm');
-
-// Se id não existir ou não for numérico, volta ao dashboard
-if (!id || isNaN(id)) {
-  alert('Consulta não especificada ou inválida.');
-  window.location = 'dashboard.html';
+// Redireciona sem token
+if (!localStorage.getItem('token')) {
+  alert('Faça login primeiro.');
+  window.location = 'login.html';
 }
 
-// Carrega detalhes da consulta
+// Logout
+document.getElementById('logoutBtn').onclick = () => {
+  localStorage.clear();
+  window.location = 'login.html';
+};
+
+const form = document.getElementById('consultaForm');
+const selectPac = form.pacienteId;
+
+// Carrega pacientes no <select>
 (async () => {
   try {
-    const consultas = await request('/consultas');
-    const cons = consultas.find(c => c.id.toString() === id);
-    if (!cons) {
-      alert('Consulta não encontrada.');
-      return window.location = 'dashboard.html';
-    }
-
-    infoEl.innerHTML = `
-      <p><strong>Paciente:</strong> ${cons.paciente_nome}</p>
-      <p><strong>Data:</strong> ${new Date(cons.dataHora).toLocaleString()}</p>
-      <p><strong>Tipo:</strong> ${cons.tipo}</p>
-      <p><strong>Status:</strong> ${cons.status}</p>
-    `;
-
-    loadDocs();
+    const pacientes = await request('/pacientes');
+    pacientes.forEach(p => {
+      const opt = document.createElement('option');
+      opt.value = p.id;
+      opt.textContent = p.nome;
+      selectPac.append(opt);
+    });
   } catch (err) {
-    alert('Erro ao carregar consulta.');
-    window.location = 'dashboard.html';
+    alert('Erro ao carregar pacientes: ' + err.message);
   }
 })();
 
-// Lista documentos
-async function loadDocs() {
-  try {
-    const docs = await request(`/consultas/${id}/documentos`);
-    docsUl.innerHTML = '';
-    docs.forEach(d => {
-      const li = document.createElement('li');
-      li.innerHTML = `<a href="${d.urlArquivo}" target="_blank">${d.urlArquivo.split('/').pop()}</a>`;
-      docsUl.append(li);
-    });
-  } catch (err) {
-    docsUl.innerHTML = '<li>Erro ao carregar documentos</li>';
-  }
-}
-
-// Upload de documento
-form.onsubmit = async e => {
+form.addEventListener('submit', async e => {
   e.preventDefault();
-  const data = new FormData(form);
+
+  const payload = {
+    pacienteId: parseInt(selectPac.value),
+    dataHora:   form.dataHora.value,
+    tipo:       form.tipo.value
+  };
+
   try {
-    const res = await fetch(`http://localhost:3000/consultas/${id}/documentos`, {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Bearer ' + localStorage.getItem('token')
-      },
-      body: data
-    });
-    if (!res.ok) throw new Error('Erro no upload');
-    alert('Documento enviado!');
-    form.reset();
-    loadDocs();
+    const res = await request('/consultas', 'POST', payload);
+    // Se o backend retornar { id }, confirma
+    if (res.id) {
+      alert('Consulta agendada: ID ' + res.id);
+      window.location = 'dashboard.html';
+    } else {
+      throw new Error('Resposta inesperada: ' + JSON.stringify(res));
+    }
   } catch (err) {
-    alert(err.message);
+    alert('Erro ao agendar: ' + err.message);
+    console.error('Erro agendar consulta:', err);
   }
-};
+});

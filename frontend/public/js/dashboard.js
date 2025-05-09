@@ -1,20 +1,12 @@
 // frontend/public/js/dashboard.js
-if (!localStorage.getItem('token')) location = 'login.html';
+
+if (!localStorage.getItem('token')) {
+  window.location = 'login.html';
+}
 document.getElementById('logoutBtn').onclick = () => {
   localStorage.clear();
-  location = 'login.html';
+  window.location = 'login.html';
 };
-
-async function loadPacientes() {
-  const pts = await request('/pacientes');
-  const ul = document.getElementById('pacientesList');
-  ul.innerHTML = '';
-  pts.forEach(p => {
-    const li = document.createElement('li');
-    li.textContent = `${p.nome} (${p.email})`;
-    ul.append(li);
-  });
-}
 
 async function loadConsultas() {
   const cs = await request('/consultas');
@@ -28,11 +20,13 @@ async function loadConsultas() {
       <button class="detalhes-btn">Ver Detalhes</button>
     `;
     li.querySelector('.detalhes-btn').addEventListener('click', () => {
-      window.location.href = `consulta-detail.html?id=${c.id}`;
+      // Salva o ID para a página de detalhes
+      localStorage.setItem('selectedConsultaId', c.id);
+      // Navega sem parâmetro
+      window.location = 'consulta-detail.html';
     });
     ul.append(li);
   });
 }
 
-loadPacientes();
 loadConsultas();

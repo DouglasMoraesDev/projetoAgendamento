@@ -55,3 +55,10 @@ Dockerfile para backend e frontend.
 GitHub Actions para CI: rodar lint, testes unitários e de integração (Jest, Supertest).
 
 Deploy automático no Railway ou Vercel.
+
+
+
+
+
+
+coplocar no agendar consulta, se e semanal ou mensal

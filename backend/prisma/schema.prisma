@@ -1,5 +1,3 @@
-// backend/prisma/schema.prisma
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,32 +8,46 @@ datasource db {
 }
 
 model Nutricionista {
-  id             Int         @id @default(autoincrement())
+  id             Int           @id @default(autoincrement())
   nome           String
-  email          String      @unique
-  senhaHash      String      @map("senha_hash")
-  fotoUrl        String?     @map("foto_url")
+  email          String        @unique
+  senhaHash      String        @map("senha_hash")
+  fotoUrl        String?       @map("foto_url")
   especialidade  String?
-  timezone       String?     @default("UTC")
-  notificacoes   Boolean     @default(true)
-  criadoEm       DateTime    @default(now()) @map("criado_em")
+  timezone       String?       @default("UTC")
+  notificacoes   Boolean       @default(true)
+  criadoEm       DateTime      @default(now()) @map("criado_em")
   pacientes      Paciente[]
   consultas      Consulta[]
 }
 
 model Paciente {
-  id              Int          @id @default(autoincrement())
-  nutricionista   Nutricionista @relation(fields: [nutricionistaId], references: [id], onDelete: Cascade)
-  nutricionistaId Int          @map("nutricionista_id")
-  nome            String
-  email           String
-  dataNasc        DateTime?    @map("data_nasc")
-  historico       String?
-  alergias        String?
-  objetivos       String?
-  criadoEm        DateTime     @default(now()) @map("criado_em")
-  consultas       Consulta[]
-  diarios         Diario[]
+  id                 Int             @id @default(autoincrement())
+  nutricionista      Nutricionista   @relation(fields: [nutricionistaId], references: [id], onDelete: Cascade)
+  nutricionistaId    Int             @map("nutricionista_id")
+  nome               String
+  email              String
+  cpf                String          @unique
+  telefone           String
+  endereco           String?
+  numero             String?
+  complemento        String?
+  bairro             String?
+  cidade             String?
+  estado             String?
+  cep                String?
+  dataNasc           DateTime?       @map("data_nasc")
+  historico          String?
+  alergias           String?
+  objetivos          String?
+  profissao          String?
+  convenio           String?
+  numeroCarteirinha  String?
+  valorSessao        Float?
+  statusCadastro     StatusCadastro   @default(ativo) @map("status_cadastro")
+  criadoEm           DateTime         @default(now()) @map("criado_em")
+  consultas          Consulta[]
+  diarios            Diario[]
 }
 
 model Consulta {
@@ -105,4 +117,11 @@ enum StatusPagamento {
   pendente
   pago
   falha
+}
+
+/// Novo enum para status de cadastro
+enum StatusCadastro {
+  ativo
+  inativo
+  bloqueado
 }

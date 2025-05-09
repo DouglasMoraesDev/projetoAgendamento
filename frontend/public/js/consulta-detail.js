@@ -1,20 +1,24 @@
 // frontend/public/js/consulta-detail.js
-if (!localStorage.getItem('token')) location = 'login.html';
+
+if (!localStorage.getItem('token')) {
+  window.location = 'login.html';
+}
 document.getElementById('logoutBtn').onclick = () => {
   localStorage.clear();
-  location = 'login.html';
+  window.location = 'login.html';
 };
 
-const params = new URLSearchParams(window.location.search);
-const id = params.get('id');
-if (!id || isNaN(id)) {
-  alert('Consulta não especificada ou inválida.');
+// Pega o ID salvo no dashboard
+const id = localStorage.getItem('selectedConsultaId');
+if (!id) {
+  alert('Consulta não especificada.');
   window.location = 'dashboard.html';
 }
 
+// Agora segue normalmente
 const infoEl = document.getElementById('infoConsulta');
 const docsUl = document.getElementById('docsList');
-const form = document.getElementById('uploadForm');
+const form   = document.getElementById('uploadForm');
 
 (async () => {
   try {
@@ -29,8 +33,8 @@ const form = document.getElementById('uploadForm');
     `;
     await loadDocs();
   } catch {
-    alert('Erro ao carregar detalhes.');
-    location = 'dashboard.html';
+    alert('Erro ao carregar detalhes da consulta.');
+    window.location = 'dashboard.html';
   }
 })();
 
@@ -63,6 +67,6 @@ form.onsubmit = async e => {
     form.reset();
     await loadDocs();
   } catch {
-    alert('Falha no upload.');
+    alert('Falha no upload de documento.');
   }
 };
