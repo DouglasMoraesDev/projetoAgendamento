@@ -1,168 +1,199 @@
-/* ========================
-   Variáveis de Tema
-   ======================== */
-   :root {
-    --color-bg: #f0f3f5;
-    --color-surface: #ffffff;
-    --color-primary: #2c3e50;
-    --color-secondary: #18bc9c;
-    --color-accent: #e74c3c;
-    --color-text: #333333;
-    --color-text-light: #ffffff;
-    --radius: 8px;
-    --transition: 0.3s ease;
-    --max-width: 800px;
-  }
-  
-  /* ========================
-     Reset & Base
-     ======================== */
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: var(--color-bg);
-    color: var(--color-text);
-    line-height: 1.6;
-  }
-  
-  /* ========================
-     Container Centralizado
-     ======================== */
+:root {
+  --color-bg: #f0f3f5;
+  --color-surface: #ffffff;
+  --color-primary: #2c3e50;
+  --color-secondary: #18bc9c;
+  --color-accent: #e74c3c;
+  --color-text: #333333;
+  --color-text-light: #ffffff;
+  --radius: 8px;
+  --transition: 0.3s ease;
+  --max-width: 800px;
+}
+
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+/* Container centralizado */
+.container {
+  max-width: var(--max-width);
+  margin: 2rem auto;
+  padding: 1rem;
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Cabeçalhos & Texto */
+h1, h2, h3 {
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+}
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--color-primary);
+}
+
+/* Inputs, Textarea & Select */
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: var(--radius);
+  transition: border-color var(--transition);
+}
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--color-secondary);
+}
+
+/* Botões */
+button {
+  display: inline-block;
+  background: var(--color-secondary);
+  color: var(--color-text-light);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background var(--transition);
+}
+button:hover {
+  background: var(--color-primary);
+}
+
+/* Navegação */
+nav {
+  background: var(--color-primary);
+  padding: 1rem;
+}
+nav a,
+nav button {
+  color: var(--color-text-light);
+  text-decoration: none;
+  margin-right: 1rem;
+  font-weight: 600;
+  transition: color var(--transition);
+}
+nav a:hover,
+nav button:hover {
+  color: var(--color-secondary);
+}
+
+/* Listas */
+ul {
+  list-style: none;
+  padding: 0;
+}
+ul li {
+  background: var(--color-surface);
+  margin-bottom: 0.75rem;
+  padding: 1rem;
+  border-radius: var(--radius);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Abas (Tabs) */
+.tabs {
+  display: flex;
+  border-bottom: 2px solid #ddd;
+  margin-bottom: 1rem;
+}
+.tab {
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  background: var(--color-surface);
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+  margin-right: 0.25rem;
+  transition: background var(--transition), color var(--transition);
+}
+.tab.active {
+  background: var(--color-secondary);
+  color: var(--color-text-light);
+  font-weight: 600;
+}
+.tab:hover {
+  background: var(--color-primary);
+  color: var(--color-text-light);
+}
+
+/* Conteúdo das Abas */
+.tab-content {
+  display: none;
+}
+.tab-content.active {
+  display: block;
+}
+
+/* Seções Específicas */
+#tab-dados,
+#tab-documentos,
+#tab-anotacoes,
+#tab-pagamentos {
+  padding: 1rem;
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+}
+
+/* Mensagem de Erro */
+.alert {
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--color-accent);
+  background: #fdecea;
+  color: var(--color-accent);
+  border-radius: var(--radius);
+}
+
+/* Responsivo */
+@media (max-width: 600px) {
   .container {
-    max-width: var(--max-width);
-    margin: 2rem auto;
+    margin: 1rem;
     padding: 1rem;
-    background: var(--color-surface);
-    border-radius: var(--radius);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   }
-  
-  /* ========================
-     Cabeçalhos & Texto
-     ======================== */
-  h1, h2, h3 {
-    color: var(--color-primary);
-    margin-bottom: 1rem;
-  }
-  
-  label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    color: var(--color-primary);
-  }
-  
-  /* ========================
-     Inputs & Botões
-     ======================== */
-  input,
-  textarea,
-  select {
-    width: 100%;
-    padding: 0.75rem;
-    margin-bottom: 1rem;
-    border: 1px solid #ccc;
-    border-radius: var(--radius);
-    transition: border-color var(--transition);
-  }
-  
-  input:focus,
-  textarea:focus,
-  select:focus {
-    outline: none;
-    border-color: var(--color-secondary);
-  }
-  
-  button {
-    display: inline-block;
-    background: var(--color-secondary);
-    color: var(--color-text-light);
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: background var(--transition);
-  }
-  
-  button:hover {
-    background: var(--color-primary);
-  }
-  
-  /* ========================
-     Navegação
-     ======================== */
   nav {
-    background: var(--color-primary);
-    padding: 1rem;
+    text-align: center;
   }
-  
   nav a,
   nav button {
-    color: var(--color-text-light);
-    text-decoration: none;
-    margin-right: 1rem;
-    font-weight: 600;
-    transition: color var(--transition);
+    display: inline-block;
+    margin: 0.5rem 0;
   }
-  
-  nav a:hover,
-  nav button:hover {
-    color: var(--color-secondary);
-  }
-  
-  /* ========================
-     Listas
-     ======================== */
-  ul {
-    list-style: none;
-    padding: 0;
-  }
-  
   ul li {
-    background: var(--color-surface);
-    margin-bottom: 0.75rem;
-    padding: 1rem;
-    border-radius: var(--radius);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
-  /* ========================
-     Layout Responsivo
-     ======================== */
-  @media (max-width: 600px) {
-    .container {
-      margin: 1rem;
-      padding: 1rem;
-    }
-  
-    nav {
-      text-align: center;
-    }
-  
-    nav a,
-    nav button {
-      display: inline-block;
-      margin: 0.5rem 0;
-    }
-  
-    ul li {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    ul li button {
-      margin-top: 0.5rem;
-      width: 100%;
-    }
+  ul li button {
+    margin-top: 0.5rem;
+    width: 100%;
   }
-  
+  .tabs {
+    flex-direction: column;
+  }
+  .tab {
+    margin-bottom: 0.5rem;
+  }
+}

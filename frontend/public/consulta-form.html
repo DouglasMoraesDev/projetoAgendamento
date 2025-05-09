@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Agendar / Editar Consulta</title>
+  <!-- Ajuste o caminho para o seu CSS servido estaticamente -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <nav>
+    <a href="dashboard.html">Dashboard</a> |
+    <a href="clients.html">Clientes</a> |
+    <a href="consulta-form.html">Consultas</a> |
+    <!-- ... outros links ... -->
+    <button id="logoutBtn">Sair</button>
+  </nav>
+
+  <main class="container">
+    <h1>Agendar / Editar Consulta</h1>
+
+    <!-- Abas -->
+    <div class="tabs">
+      <div class="tab active"     data-target="tab-dados">Dados</div>
+      <div class="tab"            data-target="tab-documentos">Documentos</div>
+      <div class="tab"            data-target="tab-anotacoes">Anotações</div>
+      <div class="tab"            data-target="tab-pagamentos">Pagamentos</div>
+    </div>
+
+    <!-- ABA DADOS -->
+    <section id="tab-dados" class="tab-content active">
+      <form id="form-consulta">
+        <label for="data-hora">Data e Hora</label>
+        <input type="datetime-local" id="data-hora" name="dataHora" required/>
+
+        <label for="tipo">Tipo</label>
+        <select id="tipo" name="tipo">
+          <option value="presencial">Presencial</option>
+          <option value="online">Online</option>
+        </select>
+
+        <!-- NOVO: Campo pesquisável de Cliente -->
+        <label for="cliente">Cliente</label>
+        <input
+          list="clientes-datalist"
+          id="cliente"
+          placeholder="Digite nome do cliente..."
+          required
+        />
+        <datalist id="clientes-datalist"></datalist>
+
+        <!-- NOVO: Campo pesquisável de Profissional -->
+        <label for="profissional">Profissional</label>
+        <input
+          list="profissionais-datalist"
+          id="profissional"
+          placeholder="Digite nome do profissional..."
+          required
+        />
+        <datalist id="profissionais-datalist"></datalist>
+
+        <button type="submit">Salvar Dados</button>
+      </form>
+    </section>
+
+    <!-- ABA DOCUMENTOS -->
+    <section id="tab-documentos" class="tab-content">
+      <h3>Documentos</h3>
+      <form id="form-documento">
+        <input type="file" id="doc-file" required/>
+        <button type="submit">Upload</button>
+      </form>
+      <ul id="lista-documentos"></ul>
+    </section>
+
+    <!-- ABA ANOTAÇÕES -->
+    <section id="tab-anotacoes" class="tab-content">
+      <h3>Anotações Clínicas</h3>
+      <div>
+        <textarea id="nota-texto" rows="3" placeholder="Digite sua anotação..."></textarea>
+        <button id="btn-salvar-nota">Salvar</button>
+      </div>
+      <ul id="lista-anotacoes"></ul>
+    </section>
+
+    <!-- ABA PAGAMENTOS -->
+    <section id="tab-pagamentos" class="tab-content">
+      <h3>Pagamentos</h3>
+      <div>
+        <input type="number" id="pag-valor" placeholder="Valor" step="0.01"/>
+        <select id="pag-metodo">
+          <option value="PIX">PIX</option>
+          <option value="boleto">Boleto</option>
+          <option value="cartao">Cartão</option>
+        </select>
+        <button id="btn-cobrar">Cobrar</button>
+      </div>
+      <ul id="lista-pagamentos"></ul>
+    </section>
+  </main>
+
+  <!-- Ajuste o caminho para o seu JS servido estaticamente -->
+  <script src="/js/consulta-form.js"></script>
+</body>
+</html>
