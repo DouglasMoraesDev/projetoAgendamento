@@ -138,3 +138,12 @@ model Documento {
   urlArquivo  String?   @map("url_arquivo")
   criadoEm    DateTime  @default(now()) @map("criado_em")
 }
+
+model Anotacao {
+  id             Int       @id @default(autoincrement())
+  appointment    Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  appointmentId  Int       @map("consulta_id")
+  texto          String
+  criadoEm       DateTime  @default(now()) @map("criado_em")
+}
+

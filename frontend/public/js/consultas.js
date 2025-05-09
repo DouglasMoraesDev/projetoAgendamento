@@ -1,11 +1,10 @@
 // public/js/consultas.js
-import { get } from './api.js';
+import { get, del } from './api.js';
 
 // Autenticação
 if (!localStorage.getItem('token')) {
   window.location = 'login.html';
 }
-
 document.getElementById('logoutBtn').onclick = () => {
   localStorage.clear();
   window.location = 'login.html';
@@ -13,6 +12,7 @@ document.getElementById('logoutBtn').onclick = () => {
 
 const ul = document.getElementById('consultasList');
 
+// Carrega e renderiza consultas, com botões de editar e excluir
 async function loadConsultas() {
   try {
     const cs = await get('/appointments');
@@ -20,20 +20,34 @@ async function loadConsultas() {
       <li>
         <strong>${new Date(c.dataHora).toLocaleString()}</strong> – 
         ${c.clientNome} [${c.status}]
-        <button class="detalhes-btn" data-id="${c.id}">Ver Detalhes</button>
+        <button onclick="editAppointment(${c.id})">✏️</button>
+        <button onclick="deleteAppointment(${c.id})">🗑️</button>
+        <button onclick="viewDocs(${c.id})">📎 Docs</button>
       </li>
     `).join('');
-
-    // adiciona event listeners
-    document.querySelectorAll('.detalhes-btn').forEach(btn => {
-      btn.onclick = () => {
-        localStorage.setItem('selectedConsultaId', btn.dataset.id);
-        window.location = 'consulta-detail.html';
-      };
-    });
   } catch (err) {
     alert('Erro ao carregar consultas: ' + err.message);
   }
 }
+
+window.editAppointment = id => {
+  // Corrige para usar appointment-form.html
+  window.location = `appointment-form.html?id=${id}`;
+};
+
+window.deleteAppointment = async id => {
+  if (!confirm('Deseja realmente excluir esta consulta?')) return;
+  try {
+    await del(`/appointments/${id}`);
+    loadConsultas();
+  } catch (err) {
+    alert('Erro ao excluir: ' + err.message);
+  }
+};
+
+window.viewDocs = id => {
+  localStorage.setItem('selectedConsultaId', id);
+  window.location = 'consulta-detail.html';
+};
 
 loadConsultas();

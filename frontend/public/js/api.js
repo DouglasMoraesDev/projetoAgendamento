@@ -1,6 +1,9 @@
 // public/js/api.js
 export const API_BASE = 'http://localhost:3000/api';
 
+// URL base do servidor onde estão os uploads estáticos
+export const BACKEND_URL = 'http://localhost:3000';
+
 export async function request(path, method = 'GET', body = null) {
   const url = `${API_BASE}${path}`;
   const headers = { 'Content-Type': 'application/json' };

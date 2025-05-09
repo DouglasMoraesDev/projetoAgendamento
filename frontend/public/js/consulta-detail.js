@@ -1,5 +1,5 @@
 // public/js/consulta-detail.js
-import { get } from './api.js';
+import { get, BACKEND_URL } from './api.js';
 
 if (!localStorage.getItem('token')) {
   window.location = 'login.html';
@@ -37,10 +37,13 @@ async function loadDocs() {
   try {
     const docs = await get(`/appointments/${appointmentId}/documents`);
     docsUl.innerHTML = docs
-      .map(d => {
+    .map(d => {
+        // nome do arquivo só para exibir
         const name = d.urlArquivo.split('/').pop();
-        return `<li><a href="${d.urlArquivo}" target="_blank">${name}</a></li>`;
-      })
+        // URL completa: backend + caminho /uploads/filename
+          const url  = `${BACKEND_URL}${d.urlArquivo}`;
+        return `<li><a href="${url}" target="_blank">${name}</a></li>`;
+         })
       .join('');
   } catch {
     docsUl.innerHTML = '<li>Erro ao carregar documentos.</li>';
