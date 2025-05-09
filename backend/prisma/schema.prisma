@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/// enum para diferentes categorias de profissional
+/// enums
 enum TipoProfissional {
   psicologo
   psiquiatra
@@ -43,81 +43,86 @@ enum StatusPagamento {
   falha
 }
 
-/// Novo enum para status de cadastro
 enum StatusCadastro {
   ativo
   inativo
   bloqueado
 }
 
+/// modelos
+
 model Professional {
-  id             Int             @id @default(autoincrement())
-  nome           String
-  email          String          @unique
-  senhaHash      String          @map("senha_hash")
-  fotoUrl        String?         @map("foto_url")
-  tipo           TipoProfissional
-  timezone       String?         @default("UTC")
-  notificacoes   Boolean         @default(true)
-  criadoEm       DateTime        @default(now()) @map("criado_em")
-  clients        Client[]        @relation("ProfessionalClients")
-  appointments   Appointment[]   @relation("ProfessionalAppointments")
+  id           Int              @id @default(autoincrement())
+  nome         String
+  email        String           @unique
+  senhaHash    String           @map("senha_hash")
+  fotoUrl      String?          @map("foto_url")
+  tipo         TipoProfissional
+  timezone     String?          @default("UTC")
+  notificacoes Boolean          @default(true)
+  criadoEm     DateTime         @default(now()) @map("criado_em")
+
+  clients      Client[]      @relation("ProfessionalClients")
+  appointments Appointment[] @relation("ProfessionalAppointments")
 }
 
 model Client {
-  id                 Int             @id @default(autoincrement())
-  professional       Professional    @relation("ProfessionalClients", fields: [professionalId], references: [id], onDelete: Cascade)
-  professionalId     Int             @map("professional_id")
-  nome               String
-  email              String
-  cpf                String          @unique
-  telefone           String
-  endereco           String?
-  numero             String?
-  complemento        String?
-  bairro             String?
-  cidade             String?
-  estado             String?
-  cep                String?
-  dataNasc           DateTime?       @map("data_nasc")
-  historico          String?
-  alergias           String?
-  objetivos          String?
-  profissao          String?
-  convenio           String?
-  numeroCarteirinha  String?
-  valorSessao        Float?
-  statusCadastro     StatusCadastro  @default(ativo) @map("status_cadastro")
-  criadoEm           DateTime        @default(now()) @map("criado_em")
-  appointments       Appointment[]   @relation("ClientAppointments")
-  diaries            Diario[]
+  id                Int            @id @default(autoincrement())
+  professional      Professional   @relation("ProfessionalClients", fields: [professionalId], references: [id], onDelete: Cascade)
+  professionalId    Int            @map("professional_id")
+  nome              String
+  email             String
+  cpf               String         @unique
+  telefone          String
+  endereco          String?
+  numero            String?
+  complemento       String?
+  bairro            String?
+  cidade            String?
+  estado            String?
+  cep               String?
+  dataNasc          DateTime?      @map("data_nasc")
+  historico         String?
+  alergias          String?
+  objetivos         String?
+  profissao         String?
+  convenio          String?
+  numeroCarteirinha String?
+  valorSessao       Float?
+  statusCadastro    StatusCadastro @default(ativo) @map("status_cadastro")
+  criadoEm          DateTime       @default(now()) @map("criado_em")
+
+  appointments Appointment[] @relation("ClientAppointments")
+  diaries      Diario[]
 }
 
 model Appointment {
-  id               Int             @id @default(autoincrement())
-  client           Client          @relation("ClientAppointments", fields: [clientId], references: [id], onDelete: Cascade)
-  clientId         Int             @map("client_id")
-  professional     Professional    @relation("ProfessionalAppointments", fields: [professionalId], references: [id], onDelete: Cascade)
-  professionalId   Int             @map("professional_id")
-  dataHora         DateTime        @map("data_hora")
-  tipo             TipoConsulta    @default(presencial)
-  status           StatusConsulta  @default(agendada)
-  criadoEm         DateTime        @default(now()) @map("criado_em")
-  pagamentos       Pagamento[]
-  documentos       Documento[]
+  id             Int            @id @default(autoincrement())
+  client         Client         @relation("ClientAppointments", fields: [clientId], references: [id], onDelete: Cascade)
+  clientId       Int            @map("client_id")
+  professional   Professional   @relation("ProfessionalAppointments", fields: [professionalId], references: [id], onDelete: Cascade)
+  professionalId Int            @map("professional_id")
+  dataHora       DateTime       @map("data_hora")
+  tipo           TipoConsulta   @default(presencial)
+  status         StatusConsulta @default(agendada)
+  criadoEm       DateTime       @default(now()) @map("criado_em")
+
+  pagamentos Pagamento[] // relação com Pagamento
+  documentos Documento[] // relação com Documento
+  anotacoes  Anotacao[]  @relation("AppointmentAnotacoes")
 }
 
 model Diario {
-  id          Int       @id @default(autoincrement())
-  client      Client    @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  clientId    Int       @map("client_id")
-  data        DateTime
-  refeicao    String?
-  porcao      String?
-  calorias    Int?
-  macros      Json?
-  nota        String?
-  criadoEm    DateTime  @default(now()) @map("criado_em")
+  id       Int      @id @default(autoincrement())
+  client   Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  clientId Int      @map("client_id")
+  data     DateTime
+  refeicao String?
+  porcao   String?
+  calorias Int?
+  macros   Json?
+  nota     String?
+  criadoEm DateTime @default(now()) @map("criado_em")
 }
 
 model Pagamento {
@@ -127,23 +132,22 @@ model Pagamento {
   valor         Float
   metodo        MetodoPagamento @default(PIX)
   status        StatusPagamento @default(pendente)
-  dataPagamento DateTime?       @map("data_pagamento")
+  criadoEm      DateTime        @default(now()) @map("criado_em")
 }
 
 model Documento {
-  id          Int       @id @default(autoincrement())
-  appointment Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
-  appointmentId Int     @map("consulta_id")
-  tipo        String?
-  urlArquivo  String?   @map("url_arquivo")
-  criadoEm    DateTime  @default(now()) @map("criado_em")
+  id            Int         @id @default(autoincrement())
+  appointment   Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  appointmentId Int         @map("consulta_id")
+  tipo          String?
+  urlArquivo    String?     @map("url_arquivo")
+  criadoEm      DateTime    @default(now()) @map("criado_em")
 }
 
 model Anotacao {
-  id             Int       @id @default(autoincrement())
-  appointment    Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
-  appointmentId  Int       @map("consulta_id")
-  texto          String
-  criadoEm       DateTime  @default(now()) @map("criado_em")
+  id            Int         @id @default(autoincrement())
+  appointment   Appointment @relation("AppointmentAnotacoes", fields: [appointmentId], references: [id], onDelete: Cascade)
+  appointmentId Int         @map("consulta_id")
+  texto         String
+  criadoEm      DateTime    @default(now()) @map("criado_em")
 }
-

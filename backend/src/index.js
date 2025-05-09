@@ -19,6 +19,9 @@ app.use(
 
 // Montagem das rotas
 
+// Financeiro: criar, listar e atualizar status de pagamentos
+app.use('/api/payments', require('./routes/paymentRoutes'));
+
 // Autenticação (login, registro, etc.)
 app.use('/api/auth', require('./routes/authRoutes'));
 
