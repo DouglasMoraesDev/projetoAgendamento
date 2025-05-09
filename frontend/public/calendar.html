@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <title>Agenda</title>
-  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+  <!-- FullCalendar v5 CSS (inclui o dayGrid) -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css"
+    rel="stylesheet"
+  >
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -12,7 +16,7 @@
     <a href="clients.html">Clientes</a> |
     <a href="appointment-form.html">Agendar Consulta</a> |
     <a href="diario.html">Diário</a> |
-    <a href="calendar.html">Agenda</a> |
+    <a href="consultas.html">Consultas</a> |
     <a href="profile.html">Perfil</a> |
     <a href="settings.html">Configurações</a> |
     <button id="logoutBtn">Sair</button>
@@ -21,9 +25,10 @@
     <div id="calendar"></div>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+  <!-- FullCalendar v5 bundle (core + dayGrid + interaction) -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+  <!-- Seus scripts -->
   <script type="module" src="js/api.js"></script>
-  <script type="module" src="js/auth.js"></script>
   <script type="module" src="js/calendar.js"></script>
 </body>
 </html>

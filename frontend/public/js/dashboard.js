@@ -1,4 +1,5 @@
-// frontend/public/js/dashboard.js
+// public/js/dashboard.js
+import { get } from './api.js';
 
 if (!localStorage.getItem('token')) {
   window.location = 'login.html';
@@ -8,25 +9,23 @@ document.getElementById('logoutBtn').onclick = () => {
   window.location = 'login.html';
 };
 
-async function loadConsultas() {
-  const cs = await request('/consultas');
-  const ul = document.getElementById('consultasList');
-  ul.innerHTML = '';
-  cs.forEach(c => {
-    const li = document.createElement('li');
-    li.innerHTML = `
-      <strong>${new Date(c.dataHora).toLocaleString()}</strong> – 
-      ${c.paciente_nome} [${c.status}]
-      <button class="detalhes-btn">Ver Detalhes</button>
-    `;
-    li.querySelector('.detalhes-btn').addEventListener('click', () => {
-      // Salva o ID para a página de detalhes
-      localStorage.setItem('selectedConsultaId', c.id);
-      // Navega sem parâmetro
-      window.location = 'consulta-detail.html';
-    });
-    ul.append(li);
-  });
+const clientsUl    = document.getElementById('clientsList');
+const consultasUl  = document.getElementById('consultasList');
+
+async function loadDashboard() {
+  try {
+    const [clients, consultas] = await Promise.all([
+      get('/clients'),
+      get('/appointments')
+    ]);
+    clientsUl.innerHTML = clients
+      .map(c => `<li>${c.nome}</li>`).join('');
+    consultasUl.innerHTML = consultas
+      .map(c => `<li>${new Date(c.dataHora).toLocaleString()} – ${c.clientNome}</li>`)
+      .join('');
+  } catch (err) {
+    alert('Erro no dashboard: ' + err.message);
+  }
 }
 
-loadConsultas();
+loadDashboard();

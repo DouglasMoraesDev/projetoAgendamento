@@ -1,47 +1,37 @@
 // public/js/auth.js
-import { request } from './api.js';
+import { post } from './api.js';
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Login
-  const lf = document.getElementById('loginForm');
-  if (lf) lf.addEventListener('submit', async e => {
+// Formulário de Login
+const loginForm = document.getElementById('loginForm');
+if (loginForm) {
+  loginForm.addEventListener('submit', async e => {
     e.preventDefault();
+    const email = e.target.email.value.trim();
+    const senha = e.target.senha.value;
     try {
-      const res = await request(
-        '/api/auth/login',
-        'POST',
-        {
-          email:  e.target.email.value.trim(),
-          senha:  e.target.senha.value
-        },
-        false
-      );
-      localStorage.setItem('token', res.token);
+      const { token } = await post('/auth/login', { email, senha });
+      localStorage.setItem('token', token);
       window.location = 'dashboard.html';
     } catch (err) {
-      alert(err.message || 'Erro no login');
+      alert(err.message);
     }
   });
+}
 
-  // Registro
-  const rf = document.getElementById('registerForm');
-  if (rf) rf.addEventListener('submit', async e => {
+// Formulário de Registro
+const registerForm = document.getElementById('registerForm');
+if (registerForm) {
+  registerForm.addEventListener('submit', async e => {
     e.preventDefault();
+    const nome  = e.target.nome.value.trim();
+    const email = e.target.email.value.trim();
+    const senha = e.target.senha.value;
     try {
-      await request(
-        '/api/auth/register',
-        'POST',
-        {
-          nome:   e.target.nome.value.trim(),
-          email:  e.target.email.value.trim(),
-          senha:  e.target.senha.value
-        },
-        false
-      );
+      await post('/auth/register', { nome, email, senha });
       alert('Cadastro realizado!');
       window.location = 'login.html';
     } catch (err) {
-      alert(err.message || 'Erro no cadastro');
+      alert(err.message);
     }
   });
-});
+}

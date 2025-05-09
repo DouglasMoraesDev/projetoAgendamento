@@ -1,28 +1,45 @@
-// Diário alimentar
-if (!localStorage.getItem('token')) location = 'login.html';
-document.getElementById('logoutBtn').onclick = () => { localStorage.clear(); location = 'login.html' };
+// public/js/diario.js
+import { get, post } from './api.js';
 
-const formD = document.getElementById('diarioForm');
-const selD = formD.pacienteId;
-(async()=>{
-  const pacientes = await request('/pacientes');
-  pacientes.forEach(p => {
-    const o = document.createElement('option');
-    o.value = p.id; o.textContent = p.nome;
-    selD.append(o);
-  });
+if (!localStorage.getItem('token')) {
+  window.location = 'login.html';
+}
+document.getElementById('logoutBtn').onclick = () => {
+  localStorage.clear();
+  window.location = 'login.html';
+};
+
+const form = document.getElementById('diarioForm');
+const select = form.clientId;
+
+// Carrega clientes
+(async () => {
+  try {
+    const clients = await get('/clients');
+    select.innerHTML = clients
+      .map(c => `<option value="${c.id}">${c.nome}</option>`)
+      .join('');
+  } catch (err) {
+    alert('Erro ao carregar clientes: ' + err.message);
+  }
 })();
 
-formD.onsubmit = async e => {
+// Submete diário
+form.addEventListener('submit', async e => {
   e.preventDefault();
-  await request('/diario', 'POST', {
-    pacienteId: parseInt(selD.value),
-    data: formD.data.value,
-    refeicao: formD.refeicao.value,
-    porcao: formD.porcao.value,
-    calorias: parseInt(formD.calorias.value),
-    nota: formD.nota.value
-  });
-  alert('Diário salvo!');
-  formD.reset();
-};
+  const body = {
+    clientId: parseInt(form.clientId.value),
+    data: form.data.value,
+    refeicao: form.refeicao.value,
+    porcao: form.porcao.value,
+    calorias: form.calorias.value ? parseInt(form.calorias.value) : undefined,
+    nota: form.nota.value
+  };
+  try {
+    await post('/diary', body);
+    alert('Diário salvo!');
+    form.reset();
+  } catch (err) {
+    alert('Erro ao salvar diário: ' + err.message);
+  }
+});

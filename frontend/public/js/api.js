@@ -1,28 +1,29 @@
 // public/js/api.js
+export const API_BASE = 'http://localhost:3000/api';
 
-export const API_URL = 'http://localhost:3000';
-
-export async function request(path, method = 'GET', body = null, auth = true) {
+export async function request(path, method = 'GET', body = null) {
+  const url = `${API_BASE}${path}`;
   const headers = { 'Content-Type': 'application/json' };
-  if (auth) {
-    const token = localStorage.getItem('token');
-    if (token) headers['Authorization'] = `Bearer ${token}`;
-  }
+  const token = localStorage.getItem('token');
+  if (token) headers['Authorization'] = `Bearer ${token}`;
 
-  const res = await fetch(`${API_URL}${path}`, {
+  const res = await fetch(url, {
     method,
     headers,
-    body: body ? JSON.stringify(body) : undefined
+    body: body ? JSON.stringify(body) : undefined,
   });
 
   let data;
   try { data = await res.json(); } catch {}
-  if (!res.ok) throw new Error(data?.message || `Erro ${res.status}`);
+
+  if (!res.ok) {
+    throw new Error(data?.message || `HTTP ${res.status}`);
+  }
   return data;
 }
 
-// Exportações nomeadas para facilitar uso
-export const get = (path, auth = true) => request(path, 'GET', null, auth);
-export const post = (path, body, auth = true) => request(path, 'POST', body, auth);
-export const put = (path, body, auth = true) => request(path, 'PUT', body, auth);
-export const del = (path, auth = true) => request(path, 'DELETE', null, auth);
+export const get   = path             => request(path, 'GET');
+export const post  = (path, body)     => request(path, 'POST', body);
+export const put   = (path, body)     => request(path, 'PUT', body);
+export const del   = path             => request(path, 'DELETE');
+export const patch = (path, body)     => request(path, 'PATCH', body);

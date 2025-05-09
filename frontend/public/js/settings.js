@@ -1,24 +1,22 @@
-// frontend/public/js/settings.js
+// public/js/settings.js
+import { put } from './api.js';
 
-if (!localStorage.getItem('token')) location = 'login.html';
-document.getElementById('logoutBtn').onclick = () => {
-  localStorage.clear();
-  location = 'login.html';
-};
+if (!localStorage.getItem('token')) {
+  window.location = 'login.html';
+}
 
 const form = document.getElementById('pwdForm');
-
-form.onsubmit = async e => {
+form.addEventListener('submit', async e => {
   e.preventDefault();
-  const data = {
+  const body = {
     senhaAtual: form.senhaAtual.value,
     novaSenha: form.novaSenha.value
   };
   try {
-    await request('/profile/password', 'PUT', data);
+    await put('/profile/password', body);
     alert('Senha alterada com sucesso!');
     form.reset();
   } catch (err) {
     alert('Erro ao alterar senha: ' + err.message);
   }
-};
+});
